@@ -1,31 +1,80 @@
-# React Invoice Generator
+# Invoice Generator
 
-React Invoice Generator allows you quickly make invoices and save them as PDF. [https://tuanpham-dev.github.io/react-invoice-generator/](https://tuanpham-dev.github.io/react-invoice-generator/)
+A modern, responsive invoice generator built with Next.js and React. Generate professional invoices with an itemized list, automatic calculations, and print/PDF export functionality.
 
-![react-invoice-generator](https://raw.githubusercontent.com/tuanpham-dev/react-invoice-generator/master/screenshot.png)
+## Features
 
-## Available Scripts
+- Clean, minimalist invoice design
+- Add/remove invoice items dynamically
+- Automatic total calculation
+- Print and save as PDF
+- Responsive design for mobile and desktop
+- Easy to customize invoice details
 
-In the project directory, you can run:
+## Getting Started
 
-### `yarn start`
+### Install Dependencies
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+npm install
+# or
+yarn install
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Run Development Server
 
-### `yarn lint` (`lint:write`)
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-Launches Prettier, an opinionated code formatter.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-https://prettier.io/
+### Build for Production
 
-### `yarn build`
+```bash
+npm run build
+# or
+yarn build
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Deploy to Vercel
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. Push your code to GitHub
+2. Import your repository in [Vercel](https://vercel.com)
+3. Vercel will automatically detect Next.js and configure the build settings
+4. Click Deploy
+
+The app will be deployed and you'll get a live URL!
+
+## Project Structure
+
+```
+├── app/
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Home page
+│   └── globals.css         # Global styles
+├── components/
+│   ├── InvoiceGenerator.tsx    # Main component
+│   ├── InvoiceForm.tsx         # Form for editing invoice
+│   ├── InvoicePreview.tsx      # Invoice preview/print view
+│   └── *.module.css            # Component styles
+└── package.json
+```
+
+## Usage
+
+1. Fill in the invoice details (Invoice Number, Date, Bill To)
+2. Add items with description, quantity, and rate
+3. The total amount is calculated automatically
+4. Customize notes and terms & conditions
+5. Click "Print / Save as PDF" to generate the invoice
+
+## Technologies
+
+- Next.js 14
+- React 18
+- TypeScript
+- CSS Modules
+
