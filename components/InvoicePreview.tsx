@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { InvoiceData } from './InvoiceGenerator'
 import styles from './InvoicePreview.module.css'
 
@@ -12,6 +13,9 @@ export default function InvoicePreview({
   invoiceData,
   totalAmount,
 }: InvoicePreviewProps) {
+  const invoiceRef = useRef<HTMLDivElement>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
+
   const formatDate = (dateString: string) => {
     if (!dateString) return ''
     const date = new Date(dateString)
@@ -21,19 +25,75 @@ export default function InvoicePreview({
     return `${month} ${day}, ${year}`
   }
 
-  const handlePrint = () => {
-    window.print()
+  const handleDownloadPDF = async () => {
+    if (!invoiceRef.current || isGenerating) return
+
+    setIsGenerating(true)
+
+    try {
+      // Dynamically import the libraries
+      const html2canvas = (await import('html2canvas')).default
+      const jsPDF = (await import('jspdf')).jsPDF
+
+      // Convert the invoice element to canvas
+      const canvas = await html2canvas(invoiceRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+      })
+
+      const imgData = canvas.toDataURL('image/png')
+      
+      // Calculate PDF dimensions
+      const imgWidth = 210 // A4 width in mm
+      const pageHeight = 297 // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+
+      // Create PDF
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      let position = 0
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      // Add additional pages if needed
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+
+      // Generate filename
+      const invoiceNumber = invoiceData.invoiceNumber || 'invoice'
+      const filename = `Invoice_${invoiceNumber.replace(/\s+/g, '_')}.pdf`
+
+      // Download PDF
+      pdf.save(filename)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Failed to generate PDF. Please try again.')
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   return (
     <div className={styles.previewContainer}>
       <div className={styles.previewActions}>
-        <button onClick={handlePrint} className={styles.printButton}>
-          Print / Save as PDF
+        <button 
+          onClick={handleDownloadPDF} 
+          className={styles.printButton}
+          disabled={isGenerating}
+        >
+          {isGenerating ? 'Generating PDF...' : 'Download PDF'}
         </button>
       </div>
       
-      <div className={styles.invoice}>
+      <div ref={invoiceRef} className={styles.invoice}>
         <div className={styles.invoiceHeader}>
           <h1 className={styles.invoiceTitle}>INVOICE</h1>
         </div>

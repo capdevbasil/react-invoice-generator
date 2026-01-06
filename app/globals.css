@@ -23,3 +23,9 @@ input, textarea {
   font-family: inherit;
 }
 
+@media print {
+  body {
+    background: white;
+  }
+}
+
